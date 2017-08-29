@@ -36,21 +36,11 @@ class TranslatorTest < MiniTest::Test
     assert_equal expected, actual
   end
 
-  def test_line_one
+  def test_individual_lines
     translate = Translator.new("hi")
 
     assert_equal "0..0", translate.line_one
-  end
-
-  def test_line_two
-    translate = Translator.new("hi")
-
     assert_equal "000.", translate.line_two
-  end
-
-  def test_line_three
-    translate = Translator.new("hi")
-
     assert_equal "....", translate.line_three
   end
 
@@ -60,5 +50,23 @@ class TranslatorTest < MiniTest::Test
     translate.eighty_character_count
 
     assert_equal 81, translate.text_out[0].length
+  end
+
+  def test_can_output_uppercase
+    translate = Translator.new("HI")
+
+    assert_equal [["..0.", "..00", ".0.."], ["...0", "..0.", ".0.."]], translate.translate_to_braille
+  end
+
+  def test_translate_mixed_case
+    translate = Translator.new("Hi")
+
+    assert_equal [["..0.", "..00", ".0.."], [".0", "0.", ".."]], translate.translate_to_braille
+  end
+
+  def test_translate_punctuation
+    translate = Translator.new("Hi!")
+
+    assert_equal [["..0.", "..00", ".0.."], [".0", "0.", ".."], ["..", "00", "0."]], translate.translate_to_braille
   end
 end
